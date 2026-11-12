@@ -1,0 +1,14 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: gold
+      POSTGRES_PASSWORD: gold
+      POSTGRES_DB: gold_shop
+    ports:
+      - "5432:5432"
+    volumes:
+      - gold_pg:/var/lib/postgresql/data
+
+volumes:
+  gold_pg:
