@@ -35,7 +35,7 @@ npm install
 Create a `.env` file:
 
 ```env
-DATABASE_URL=postgresql://gold:gold@localhost:5432/gold_shop
+DATABASE_URL=your_database_url
 AUTH_SECRET=replace-with-a-long-random-string
 OWNER_EMAIL=owner@goldshop.local
 OWNER_PASSWORD=change-this-password
