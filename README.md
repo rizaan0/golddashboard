@@ -37,7 +37,6 @@ Create a `.env` file:
 ```env
 DATABASE_URL=your_database_url
 AUTH_SECRET=replace-with-a-long-random-string
-OWNER_EMAIL=owner@goldshop.local
 OWNER_PASSWORD=change-this-password
 ```
 
