@@ -130,7 +130,7 @@ export function createLiquidGlassRenderer(canvas: HTMLCanvasElement) {
   let shapeWidth = 1;
   let shapeHeight = 1;
   let corner = 14;
-  let roundness = studioGlass.shapeRoundness;
+  let roundness: number = studioGlass.shapeRoundness;
   let pageRatio = 1;
   let pageReady = 0;
   let tint = [studioGlass.tint.r / 255, studioGlass.tint.g / 255, studioGlass.tint.b / 255, studioGlass.tint.a];
