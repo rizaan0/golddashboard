@@ -1,36 +1,75 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Gold Dashboard
 
-## Getting Started
+A private ledger for a jewellery shop's 11-month gold savings schemes. The owner keeps customer records, records each installment, and sees what has been collected.
 
-First, run the development server:
+## What it does
+
+- **Customers** — add, search, and update customer records
+- **Schemes** — open one 11-installment scheme per customer, with a fixed monthly amount and a preserved due-date schedule
+- **Payments** — record a full installment on its due date, and clear a mistaken payment
+- **Dashboard** — today's, this month's, and this year's collections, plus overdue installments
+- **Archive** — keep finished and inactive records without deleting them
+- **Passcode** — one owner signs in with a four-digit code
+
+Amounts are stored in paise. Due dates follow the original start day, in Asia/Kolkata.
+
+## Stack
+
+- **Next.js 16** (App Router) and **React 19**
+- **PostgreSQL** and **Prisma**
+- **Auth.js** — credentials session in an HTTP-only cookie
+- **Tailwind CSS**
+
+## Getting started
+
+### 1. Clone and install
+
+```bash
+git clone https://github.com/rizaan0/golddashboard.git
+cd golddashboard
+npm install
+```
+
+### 2. Environment variables
+
+Create a `.env` file:
+
+```env
+DATABASE_URL=postgresql://gold:gold@localhost:5432/gold_shop
+AUTH_SECRET=replace-with-a-long-random-string
+OWNER_EMAIL=owner@goldshop.local
+OWNER_PASSWORD=change-this-password
+```
+
+`OWNER_PASSWORD` is the four-digit passcode. Change it before anyone else can open the app.
+
+### 3. Database
+
+Start Postgres, apply the migrations, and create the owner:
+
+```bash
+npm run db:up
+npm run db:migrate
+npm run db:seed
+```
+
+### 4. Run
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+## Project structure
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
-
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/
+    (auth)/login/     # Passcode sign-in
+    (app)/            # Dashboard, customers, schemes, archive, settings
+  components/         # Shell, forms, charts, glass controls
+  lib/                # Money, dates, passcode, auth guard
+  server/             # Queries, ledger rules, server actions
+prisma/
+  schema.prisma
+  migrations/
+```
