@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id           String     @id @default(uuid()) @db.Uuid
+  email        String     @unique
+  passwordHash String     @map("password_hash")
+  passcodeHash String?    @map("passcode_hash")
+  createdAt    DateTime   @default(now()) @map("created_at")
+  updatedAt    DateTime   @updatedAt @map("updated_at")
+  auditLogs    AuditLog[]
+
+  @@map("users")
+}
+
+model Customer {
+  id           String        @id @default(uuid()) @db.Uuid
+  customerCode String        @unique @map("customer_code")
+  fullName     String        @map("full_name")
+  phone        String
+  address      String?
+  notes        String?
+  status       String        @default("active")
+  createdAt    DateTime      @default(now()) @map("created_at")
+  updatedAt    DateTime      @updatedAt @map("updated_at")
+  archivedAt   DateTime?     @map("archived_at")
+  schemes      Scheme[]
+  transactions Transaction[]
+
+  @@index([fullName])
+  @@index([phone])
+  @@map("customers")
+}
+
+model Scheme {
+  id                      String        @id @default(uuid()) @db.Uuid
+  customerId              String        @map("customer_id") @db.Uuid
+  schemeCode              String        @unique @map("scheme_code")
+  monthlyInstallmentPaise Int           @map("monthly_installment_paise")
+  durationMonths          Int           @default(11) @map("duration_months")
+  startDate               DateTime      @map("start_date") @db.Date
+  completionDate          DateTime?     @map("completion_date") @db.Date
+  totalAmountPaise        Int           @map("total_amount_paise")
+  status                  String        @default("active")
+  archivedAt              DateTime?     @map("archived_at")
+  createdAt               DateTime      @default(now()) @map("created_at")
+  updatedAt               DateTime      @updatedAt @map("updated_at")
+  customer                Customer      @relation(fields: [customerId], references: [id])
+  installments            Installment[]
+  transactions            Transaction[]
+
+  @@index([customerId, status])
+  @@index([status, archivedAt])
+  @@map("schemes")
+}
+
+model Installment {
+  id                String        @id @default(uuid()) @db.Uuid
+  schemeId          String        @map("scheme_id") @db.Uuid
+  installmentNumber Int           @map("installment_number")
+  dueDate           DateTime      @map("due_date") @db.Date
+  amountDuePaise    Int           @map("amount_due_paise")
+  createdAt         DateTime      @default(now()) @map("created_at")
+  updatedAt         DateTime      @updatedAt @map("updated_at")
+  scheme            Scheme        @relation(fields: [schemeId], references: [id])
+  transactions      Transaction[]
+
+  @@unique([schemeId, installmentNumber])
+  @@index([dueDate])
+  @@map("installments")
+}
+
+model Transaction {
+  id                  String      @id @default(uuid()) @db.Uuid
+  transactionCode     String      @unique @map("transaction_code")
+  customerId          String      @map("customer_id") @db.Uuid
+  schemeId            String      @map("scheme_id") @db.Uuid
+  installmentId       String      @map("installment_id") @db.Uuid
+  amountReceivedPaise Int         @map("amount_received_paise")
+  paymentDate         DateTime    @map("payment_date") @db.Date
+  paymentMethod       String?     @map("payment_method")
+  notes               String?
+  reversedAt          DateTime?   @map("reversed_at")
+  reversalReason      String?     @map("reversal_reason")
+  createdAt           DateTime    @default(now()) @map("created_at")
+  updatedAt           DateTime    @updatedAt @map("updated_at")
+  customer            Customer    @relation(fields: [customerId], references: [id])
+  scheme              Scheme      @relation(fields: [schemeId], references: [id])
+  installment         Installment @relation(fields: [installmentId], references: [id])
+
+  @@index([paymentDate])
+  @@index([customerId])
+  @@index([schemeId])
+  @@map("transactions")
+}
+
+model AuditLog {
+  id             String   @id @default(uuid()) @db.Uuid
+  userId         String?  @map("user_id") @db.Uuid
+  entityType     String   @map("entity_type")
+  entityId       String   @map("entity_id")
+  action         String
+  previousValues Json?    @map("previous_values")
+  newValues      Json?    @map("new_values")
+  createdAt      DateTime @default(now()) @map("created_at")
+  user           User?    @relation(fields: [userId], references: [id])
+
+  @@index([entityType, entityId])
+  @@index([createdAt])
+  @@map("audit_logs")
+}
+
+model AppSetting {
+  id                         String   @id
+  businessName               String   @default("Gold Savings") @map("business_name")
+  allowMultipleActiveSchemes Boolean  @default(false) @map("allow_multiple_active_schemes")
+  updatedAt                  DateTime @updatedAt @map("updated_at")
+
+  @@map("app_settings")
+}
+
+model LoginAttempt {
+  id          String    @id @default(uuid()) @db.Uuid
+  email       String    @unique
+  failedCount Int       @default(0) @map("failed_count")
+  lockedUntil DateTime? @map("locked_until")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("login_attempts")
+}
