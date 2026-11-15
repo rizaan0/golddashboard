@@ -1,12 +1,15 @@
 import type { ReactNode } from "react";
+import { PageFade } from "@/components/page-fade";
 import { LoaderSkeleton } from "@/components/ui/loaders-skeleton";
 
 export function LoadingStatus({ children, className }: { children: ReactNode; className?: string }) {
   return (
-    <div role="status" aria-live="polite" className={className}>
-      <span className="sr-only">Loading records</span>
-      {children}
-    </div>
+    <PageFade>
+      <div role="status" aria-live="polite" className={className}>
+        <span className="sr-only">Loading records</span>
+        {children}
+      </div>
+    </PageFade>
   );
 }
 
