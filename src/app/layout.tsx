@@ -2,9 +2,9 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: { default: "Gold Savings", template: "%s · Gold Savings" },
+  title: { default: "akashgold", template: "%s · akashgold" },
   description: "Gold savings scheme records for the shop owner",
-  appleWebApp: { capable: true, title: "Gold Savings", statusBarStyle: "default" },
+  appleWebApp: { capable: true, title: "akashgold", statusBarStyle: "default" },
 };
 
 export const viewport: Viewport = {
