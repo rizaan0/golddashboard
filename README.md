@@ -1,6 +1,6 @@
 # Gold Dashboard
 
-A private ledger for a jewellery shop's 11-month gold savings schemes. The owner keeps customer records, records each installment, and sees what has been collected.
+A private ledger for a jewellery shop's gold saving schemes. The owner keeps customer records, records each installment, and sees what has been collected.
 
 ## What it does
 
@@ -11,7 +11,7 @@ A private ledger for a jewellery shop's 11-month gold savings schemes. The owner
 - **Archive** — keep finished and inactive records without deleting them
 - **Passcode** — one owner signs in with a four-digit code
 
-Amounts are stored in paise. Due dates follow the original start day, in Asia/Kolkata.
+Amounts are stored in rupees.
 
 ## Stack
 
